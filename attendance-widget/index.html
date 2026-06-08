@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Weekly Attendance Timeline</title>
+    <style>
+:root {
+  color-scheme: light;
+  --rail-height: 88px;
+  --rail-top-offset: 8px;
+  --paper: #f7f3eb;
+  --paper-strong: #efe7da;
+  --ink: #26221d;
+  --ink-soft: #776b5e;
+  --line: rgba(38, 34, 29, 0.14);
+  --line-strong: rgba(38, 34, 29, 0.22);
+  --bar-up: #c84f3f;
+  --bar-up-glow: rgba(200, 79, 63, 0.18);
+  --bar-down: #247557;
+  --bar-down-glow: rgba(36, 117, 87, 0.18);
+  --baseline: rgba(38, 34, 29, 0.28);
+  --chip: rgba(255, 255, 255, 0.72);
+  --shadow: 0 20px 60px rgba(79, 56, 24, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.65), transparent 28%),
+    linear-gradient(180deg, #f9f6ef 0%, #f4eee3 100%);
+  color: var(--ink);
+  font-family: "Avenir Next", "Helvetica Neue", sans-serif;
+}
+
+body {
+  padding: 12px;
+}
+
+.widget-shell {
+  width: 100%;
+}
+
+.timeline-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(82, 61, 33, 0.08);
+  border-radius: 26px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(247, 243, 235, 0.94)),
+    repeating-linear-gradient(
+      90deg,
+      rgba(79, 56, 24, 0.02) 0,
+      rgba(79, 56, 24, 0.02) 1px,
+      transparent 1px,
+      transparent 22px
+    );
+  box-shadow: var(--shadow);
+}
+
+.timeline-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.34), transparent 24%),
+    radial-gradient(circle at 85% 10%, rgba(200, 79, 63, 0.08), transparent 26%);
+  pointer-events: none;
+}
+
+.timeline-header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px 10px;
+}
+
+.header-copy {
+  min-width: 0;
+}
+
+.active-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+}
+
+.summary-range {
+  font-family: "Iowan Old Style", "Palatino Linotype", serif;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.summary-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px 6px;
+  border-radius: 999px;
+  background: var(--chip);
+  backdrop-filter: blur(10px);
+  box-shadow: inset 0 0 0 1px rgba(38, 34, 29, 0.06);
+}
+
+.summary-stat-label {
+  color: var(--ink-soft);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.summary-stat-value {
+  font-family: "SF Mono", "JetBrains Mono", monospace;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.summary-stat.is-diff.is-above .summary-stat-value {
+  color: var(--bar-up);
+}
+
+.summary-stat.is-diff.is-below .summary-stat-value {
+  color: var(--bar-down);
+}
+
+.summary-stat.is-diff.is-equal .summary-stat-value {
+  color: var(--ink-soft);
+}
+
+.as-of {
+  display: none;
+}
+
+.timeline-viewport {
+  position: relative;
+  min-height: 138px;
+  padding: 2px 0 14px;
+}
+
+.baseline-tag {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  z-index: 3;
+  transform: translateY(-50%);
+  padding: 4px 8px 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: inset 0 0 0 1px rgba(38, 34, 29, 0.06);
+  color: var(--ink-soft);
+  font-family: "SF Mono", "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+.timeline-scroller {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0 52px 0 68px;
+  cursor: grab;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+}
+
+.timeline-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.timeline-scroller.is-dragging {
+  cursor: grabbing;
+}
+
+.timeline-track {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  width: max-content;
+  min-height: 110px;
+  padding: var(--rail-top-offset) 10px 0 8px;
+}
+
+.timeline-track::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--rail-top-offset) + (var(--rail-height) / 2));
+  height: 1px;
+  background:
+    linear-gradient(90deg, transparent 0%, var(--baseline) 6%, var(--baseline) 94%, transparent 100%);
+  pointer-events: none;
+}
+
+.week-node {
+  position: relative;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  justify-items: center;
+  width: 24px;
+  min-height: 110px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.week-node::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  bottom: 22px;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(38, 34, 29, 0.04), transparent);
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.week-node:hover::after,
+.week-node.is-active::after {
+  opacity: 1;
+}
+
+.week-hitbox {
+  position: relative;
+  width: 100%;
+  height: var(--rail-height);
+}
+
+.week-bar {
+  position: absolute;
+  left: 50%;
+  width: 14px;
+  border-radius: 8px;
+  transform: translateX(-50%);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    opacity 180ms ease,
+    filter 180ms ease;
+}
+
+.week-bar.is-above {
+  bottom: 50%;
+  background: linear-gradient(180deg, #dc6654 0%, var(--bar-up) 100%);
+  box-shadow:
+    0 0 0 1px rgba(200, 79, 63, 0.14),
+    0 10px 22px var(--bar-up-glow);
+}
+
+.week-bar.is-below {
+  top: 50%;
+  background: linear-gradient(180deg, #2f916d 0%, var(--bar-down) 100%);
+  box-shadow:
+    0 0 0 1px rgba(36, 117, 87, 0.16),
+    0 10px 22px var(--bar-down-glow);
+}
+
+.week-bar.is-equal {
+  top: calc(50% - 2px);
+  height: 4px !important;
+  background: rgba(38, 34, 29, 0.3);
+  box-shadow: none;
+}
+
+.week-node:hover .week-bar,
+.week-node.is-active .week-bar {
+  transform: translateX(-50%) scaleX(1.08);
+  filter: saturate(1.08);
+}
+
+.week-label {
+  margin-top: 8px;
+  color: rgba(38, 34, 29, 0.48);
+  font-family: "SF Mono", "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 180ms ease, color 180ms ease;
+}
+
+.week-node:hover .week-label,
+.week-node:focus .week-label,
+.week-node:focus-visible .week-label {
+  opacity: 1;
+}
+
+.week-node:hover .week-label,
+.week-node:focus .week-label,
+.week-node:focus-visible .week-label {
+  color: var(--ink-soft);
+}
+
+.edge-fade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 44px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.edge-fade-left {
+  left: 0;
+  background: linear-gradient(90deg, rgba(247, 243, 235, 0.96), rgba(247, 243, 235, 0));
+}
+
+.edge-fade-right {
+  right: 0;
+  background: linear-gradient(270deg, rgba(247, 243, 235, 0.96), rgba(247, 243, 235, 0));
+}
+
+.empty-state {
+  padding: 24px 18px 22px;
+  color: var(--ink-soft);
+  font-family: "Iowan Old Style", "Palatino Linotype", serif;
+  font-size: 18px;
+}
+
+@media (max-width: 680px) {
+  body {
+    padding: 8px;
+  }
+
+  .timeline-card {
+    border-radius: 22px;
+  }
+
+  .timeline-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .summary-range {
+    font-size: 21px;
+  }
+
+  .summary-stat {
+    gap: 6px;
+    padding-inline: 9px;
+  }
+
+  .summary-stat-value {
+    font-size: 14px;
+  }
+
+  .timeline-scroller {
+    padding-left: 62px;
+  }
+}
+
+    </style>
+  </head>
+  <body>
+    <main class="widget-shell">
+      <section class="timeline-card" aria-label="周平均工时趋势">
+        <header class="timeline-header">
+          <div class="header-copy">
+            <div class="active-summary" id="active-summary">
+              <span class="summary-range" id="summary-range">--/--</span>
+              <span class="summary-stat">
+                <span class="summary-stat-label">周平均工时</span>
+                <span class="summary-stat-value" id="summary-average">--:--</span>
+              </span>
+              <span class="summary-stat">
+                <span class="summary-stat-label">周总工时</span>
+                <span class="summary-stat-value" id="summary-total">--:--</span>
+              </span>
+              <span class="summary-stat is-diff" id="summary-diff">
+                <span class="summary-stat-label">较 9h</span>
+                <span class="summary-stat-value">+00:00</span>
+              </span>
+            </div>
+          </div>
+          <p class="as-of" id="as-of">as of --/--</p>
+        </header>
+
+        <section class="timeline-viewport" aria-label="可横向滑动的周工时时间轴">
+          <div class="baseline-tag">9小时</div>
+          <div class="edge-fade edge-fade-left" aria-hidden="true"></div>
+          <div class="edge-fade edge-fade-right" aria-hidden="true"></div>
+          <div class="timeline-scroller" id="timeline-scroller" tabindex="0">
+            <div class="timeline-track" id="timeline-track"></div>
+          </div>
+        </section>
+      </section>
+    </main>
+    <script>
+      window.__WEEKLY_SUMMARY__ = {"as_of": "2026-06-08", "baseline_minutes": 540, "baseline_hhmm": "09:00", "weeks": [{"week_start": "2026-06-01", "week_end": "2026-06-07", "included_start": "2026-06-01", "included_end": "2026-06-05", "label": "06/01-06/05", "total_minutes": 3630, "total_hhmm": "60:30", "average_minutes": 726, "average_hhmm": "12:06", "diff_minutes": 186, "diff_hhmm": "03:06", "diff_signed_hhmm": "+03:06", "direction": "above", "bar_count": 6, "bar": "🟥🟥🟥🟥🟥🟥", "included_days": 5, "dates": ["2026-06-01", "2026-06-02", "2026-06-03", "2026-06-04", "2026-06-05"], "daily_minutes": [630, 735, 905, 700, 660]}, {"week_start": "2026-05-25", "week_end": "2026-05-31", "included_start": "2026-05-25", "included_end": "2026-05-29", "label": "05/25-05/29", "total_minutes": 2983, "total_hhmm": "49:43", "average_minutes": 597, "average_hhmm": "09:57", "diff_minutes": 57, "diff_hhmm": "00:57", "diff_signed_hhmm": "+00:57", "direction": "above", "bar_count": 2, "bar": "🟥🟥", "included_days": 5, "dates": ["2026-05-25", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29"], "daily_minutes": [450, 685, 634, 660, 554]}, {"week_start": "2026-05-18", "week_end": "2026-05-24", "included_start": "2026-05-18", "included_end": "2026-05-22", "label": "05/18-05/22", "total_minutes": 3272, "total_hhmm": "54:32", "average_minutes": 654, "average_hhmm": "10:54", "diff_minutes": 114, "diff_hhmm": "01:54", "diff_signed_hhmm": "+01:54", "direction": "above", "bar_count": 4, "bar": "🟥🟥🟥🟥", "included_days": 5, "dates": ["2026-05-18", "2026-05-19", "2026-05-20", "2026-05-21", "2026-05-22"], "daily_minutes": [420, 817, 655, 775, 605]}, {"week_start": "2026-05-11", "week_end": "2026-05-17", "included_start": "2026-05-11", "included_end": "2026-05-15", "label": "05/11-05/15", "total_minutes": 3135, "total_hhmm": "52:15", "average_minutes": 627, "average_hhmm": "10:27", "diff_minutes": 87, "diff_hhmm": "01:27", "diff_signed_hhmm": "+01:27", "direction": "above", "bar_count": 3, "bar": "🟥🟥🟥", "included_days": 5, "dates": ["2026-05-11", "2026-05-12", "2026-05-13", "2026-05-14", "2026-05-15"], "daily_minutes": [699, 658, 543, 675, 560]}, {"week_start": "2026-05-04", "week_end": "2026-05-10", "included_start": "2026-05-07", "included_end": "2026-05-09", "label": "05/07-05/09", "total_minutes": 1808, "total_hhmm": "30:08", "average_minutes": 603, "average_hhmm": "10:03", "diff_minutes": 63, "diff_hhmm": "01:03", "diff_signed_hhmm": "+01:03", "direction": "above", "bar_count": 2, "bar": "🟥🟥", "included_days": 3, "dates": ["2026-05-07", "2026-05-08", "2026-05-09"], "daily_minutes": [588, 707, 513]}, {"week_start": "2026-04-27", "week_end": "2026-05-03", "included_start": "2026-04-27", "included_end": "2026-04-30", "label": "04/27-04/30", "total_minutes": 2080, "total_hhmm": "34:40", "average_minutes": 520, "average_hhmm": "08:40", "diff_minutes": -20, "diff_hhmm": "00:20", "diff_signed_hhmm": "-00:20", "direction": "below", "bar_count": 1, "bar": "🟩", "included_days": 4, "dates": ["2026-04-27", "2026-04-28", "2026-04-29", "2026-04-30"], "daily_minutes": [360, 630, 625, 465]}, {"week_start": "2026-04-20", "week_end": "2026-04-26", "included_start": "2026-04-20", "included_end": "2026-04-24", "label": "04/20-04/24", "total_minutes": 3049, "total_hhmm": "50:49", "average_minutes": 610, "average_hhmm": "10:10", "diff_minutes": 70, "diff_hhmm": "01:10", "diff_signed_hhmm": "+01:10", "direction": "above", "bar_count": 2, "bar": "🟥🟥", "included_days": 5, "dates": ["2026-04-20", "2026-04-21", "2026-04-22", "2026-04-23", "2026-04-24"], "daily_minutes": [479, 650, 645, 650, 625]}, {"week_start": "2026-04-13", "week_end": "2026-04-19", "included_start": "2026-04-13", "included_end": "2026-04-17", "label": "04/13-04/17", "total_minutes": 3885, "total_hhmm": "64:45", "average_minutes": 777, "average_hhmm": "12:57", "diff_minutes": 237, "diff_hhmm": "03:57", "diff_signed_hhmm": "+03:57", "direction": "above", "bar_count": 8, "bar": "🟥🟥🟥🟥🟥🟥🟥🟥", "included_days": 5, "dates": ["2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17"], "daily_minutes": [828, 695, 777, 680, 905]}, {"week_start": "2026-04-06", "week_end": "2026-04-12", "included_start": "2026-04-07", "included_end": "2026-04-10", "label": "04/07-04/10", "total_minutes": 2694, "total_hhmm": "44:54", "average_minutes": 674, "average_hhmm": "11:14", "diff_minutes": 134, "diff_hhmm": "02:14", "diff_signed_hhmm": "+02:14", "direction": "above", "bar_count": 4, "bar": "🟥🟥🟥🟥", "included_days": 4, "dates": ["2026-04-07", "2026-04-08", "2026-04-09", "2026-04-10"], "daily_minutes": [825, 621, 708, 540]}]};
+    </script>
+    <script type="module">
+const DATA_URL = "./weekly-summary.json";
+const RECENT_OFFSET = 3;
+const MAX_BAR_MINUTES = 4 * 60;
+
+const scroller = document.getElementById("timeline-scroller");
+const track = document.getElementById("timeline-track");
+const summaryRange = document.getElementById("summary-range");
+const summaryAverage = document.getElementById("summary-average");
+const summaryTotal = document.getElementById("summary-total");
+const summaryDiff = document.getElementById("summary-diff");
+const summaryDiffValue = summaryDiff?.querySelector(".summary-stat-value");
+const asOf = document.getElementById("as-of");
+
+let weeks = [];
+let activeIndex = -1;
+
+function formatAsOf(isoDate) {
+  const [year, month, day] = isoDate.split("-");
+  return `as of ${month}/${day}/${year.slice(-2)}`;
+}
+
+function labelForRail(week) {
+  const [startMonth, startDay] = week.label.split("-")[0].split("/");
+  const [endMonth, endDay] = week.label.split("-")[1].split("/");
+  return startMonth === endMonth ? `${endMonth}/${endDay}` : `${endMonth}/${endDay}`;
+}
+
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function heightForWeek(week) {
+  const magnitude = Math.min(Math.abs(week.diff_minutes), MAX_BAR_MINUTES);
+  return Math.max(8, Math.round((magnitude / MAX_BAR_MINUTES) * 40));
+}
+
+function pickInitialIndex() {
+  return Math.max(weeks.length - 1 - RECENT_OFFSET, 0);
+}
+
+function setActive(index, { center = false } = {}) {
+  if (!weeks.length) {
+    return;
+  }
+  activeIndex = clamp(index, 0, weeks.length - 1);
+  const activeWeek = weeks[activeIndex];
+  summaryRange.textContent = activeWeek.label;
+  summaryAverage.textContent = activeWeek.average_hhmm;
+  summaryTotal.textContent = activeWeek.total_hhmm;
+  summaryDiffValue.textContent = activeWeek.diff_signed_hhmm;
+  summaryDiff.classList.remove("is-above", "is-below", "is-equal");
+  summaryDiff.classList.add(
+    activeWeek.direction === "above"
+      ? "is-above"
+      : activeWeek.direction === "below"
+        ? "is-below"
+        : "is-equal"
+  );
+
+  Array.from(track.children).forEach((node, nodeIndex) => {
+    node.classList.toggle("is-active", nodeIndex === activeIndex);
+  });
+
+  if (center) {
+    const activeNode = track.children[activeIndex];
+    if (activeNode) {
+      const target =
+        activeNode.offsetLeft -
+        scroller.clientWidth / 2 +
+        activeNode.clientWidth / 2;
+      scroller.scrollTo({
+        left: Math.max(target, 0),
+        behavior: "smooth",
+      });
+    }
+  }
+}
+
+function renderEmpty() {
+  track.innerHTML = "";
+  track.className = "timeline-track";
+  track.insertAdjacentHTML(
+    "beforeend",
+    '<p class="empty-state">还没有可展示的完整工作周。</p>'
+  );
+}
+
+function render() {
+  if (!weeks.length) {
+    renderEmpty();
+    return;
+  }
+
+  track.innerHTML = "";
+
+  weeks.forEach((week, index) => {
+    const node = document.createElement("button");
+    node.type = "button";
+    node.className = "week-node";
+    node.setAttribute(
+      "aria-label",
+      `${week.label} 周平均 ${week.average_hhmm} 周总 ${week.total_hhmm} 与九小时差 ${week.diff_signed_hhmm}`
+    );
+
+    const hitbox = document.createElement("span");
+    hitbox.className = "week-hitbox";
+
+    const bar = document.createElement("span");
+    bar.className = `week-bar is-${week.direction}`;
+    bar.style.height = `${heightForWeek(week)}px`;
+
+    hitbox.appendChild(bar);
+    node.appendChild(hitbox);
+
+    const label = document.createElement("span");
+    label.className = "week-label";
+    label.textContent = labelForRail(week);
+    node.appendChild(label);
+
+    node.addEventListener("mouseenter", () => setActive(index));
+    node.addEventListener("focus", () => setActive(index));
+    node.addEventListener("click", () => setActive(index, { center: true }));
+
+    track.appendChild(node);
+  });
+
+  setActive(pickInitialIndex(), { center: true });
+}
+
+function enableDragScroll() {
+  let isPointerDown = false;
+  let originX = 0;
+  let originScrollLeft = 0;
+
+  scroller.addEventListener("pointerdown", (event) => {
+    isPointerDown = true;
+    originX = event.clientX;
+    originScrollLeft = scroller.scrollLeft;
+    scroller.classList.add("is-dragging");
+    scroller.setPointerCapture(event.pointerId);
+  });
+
+  scroller.addEventListener("pointermove", (event) => {
+    if (!isPointerDown) {
+      return;
+    }
+    const delta = event.clientX - originX;
+    scroller.scrollLeft = originScrollLeft - delta;
+  });
+
+  const release = (event) => {
+    if (!isPointerDown) {
+      return;
+    }
+    isPointerDown = false;
+    scroller.classList.remove("is-dragging");
+    if (event.pointerId !== undefined) {
+      scroller.releasePointerCapture(event.pointerId);
+    }
+  };
+
+  scroller.addEventListener("pointerup", release);
+  scroller.addEventListener("pointercancel", release);
+  scroller.addEventListener("pointerleave", release);
+  scroller.addEventListener("wheel", (event) => {
+    if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
+      return;
+    }
+    event.preventDefault();
+    scroller.scrollLeft += event.deltaY;
+  }, { passive: false });
+
+  scroller.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowRight") {
+      scroller.scrollBy({ left: 120, behavior: "smooth" });
+    } else if (event.key === "ArrowLeft") {
+      scroller.scrollBy({ left: -120, behavior: "smooth" });
+    }
+  });
+}
+
+async function loadWeeks() {
+  const payload = globalThis.__WEEKLY_SUMMARY__ || await (async () => {
+    const response = await fetch(DATA_URL, { cache: "no-store" });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    return response.json();
+  })();
+  asOf.textContent = formatAsOf(payload.as_of);
+  weeks = [...payload.weeks].reverse();
+}
+
+async function main() {
+  enableDragScroll();
+  try {
+    await loadWeeks();
+    render();
+  } catch (error) {
+    console.error(error);
+    renderEmpty();
+    asOf.textContent = "data unavailable";
+  }
+}
+
+main();
+
+    </script>
+  </body>
+</html>
