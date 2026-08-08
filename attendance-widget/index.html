@@ -458,7 +458,7 @@ function heightForWeek(week) {
 }
 
 function pickInitialIndex() {
-  return Math.max(weeks.length - 1 - RECENT_OFFSET, 0);
+  return Math.min(RECENT_OFFSET, Math.max(weeks.length - 1, 0));
 }
 
 function setActive(index, { center = false } = {}) {
@@ -616,7 +616,7 @@ async function loadWeeks() {
     return response.json();
   })();
   asOf.textContent = formatAsOf(payload.as_of);
-  weeks = [...payload.weeks].reverse();
+  weeks = [...payload.weeks];
 }
 
 async function main() {
