@@ -1,38 +1,79 @@
 {
-  "as_of": "2026-08-11",
+  "as_of": "2026-08-27",
   "baseline_minutes": 540,
   "baseline_hhmm": "09:00",
   "weeks": [
     {
+      "week_start": "2026-08-24",
+      "week_end": "2026-08-30",
+      "included_start": "2026-08-24",
+      "included_end": "2026-08-26",
+      "label": "08/24-08/26",
+      "total_minutes": 2176,
+      "total_hhmm": "36:16",
+      "workday_total_minutes": 2176,
+      "workday_total_hhmm": "36:16",
+      "workday_average_minutes": 725,
+      "workday_average_hhmm": "12:05",
+      "rest_overtime_minutes": 0,
+      "rest_overtime_hhmm": "00:00",
+      "average_minutes": 725,
+      "average_hhmm": "12:05",
+      "diff_minutes": 185,
+      "diff_hhmm": "03:05",
+      "diff_signed_hhmm": "+03:05",
+      "direction": "above",
+      "bar_count": 6,
+      "bar": "🟥🟥🟥🟥🟥🟥",
+      "included_days": 3
+    },
+    {
+      "week_start": "2026-08-17",
+      "week_end": "2026-08-23",
+      "included_start": "2026-08-17",
+      "included_end": "2026-08-21",
+      "label": "08/17-08/21",
+      "total_minutes": 3500,
+      "total_hhmm": "58:20",
+      "workday_total_minutes": 2960,
+      "workday_total_hhmm": "49:20",
+      "workday_average_minutes": 592,
+      "workday_average_hhmm": "09:52",
+      "rest_overtime_minutes": 540,
+      "rest_overtime_hhmm": "09:00",
+      "average_minutes": 1132,
+      "average_hhmm": "18:52",
+      "diff_minutes": 592,
+      "diff_hhmm": "09:52",
+      "diff_signed_hhmm": "+09:52",
+      "direction": "above",
+      "bar_count": 8,
+      "bar": "🟥🟥🟥🟥🟥🟥🟥🟥",
+      "included_days": 5
+    },
+    {
       "week_start": "2026-08-10",
       "week_end": "2026-08-16",
       "included_start": "2026-08-10",
-      "included_end": "2026-08-10",
-      "label": "08/10-08/10",
-      "total_minutes": 680,
-      "total_hhmm": "11:20",
-      "workday_total_minutes": 680,
-      "workday_total_hhmm": "11:20",
-      "workday_average_minutes": 680,
-      "workday_average_hhmm": "11:20",
+      "included_end": "2026-08-14",
+      "label": "08/10-08/14",
+      "total_minutes": 2796,
+      "total_hhmm": "46:36",
+      "workday_total_minutes": 2796,
+      "workday_total_hhmm": "46:36",
+      "workday_average_minutes": 559,
+      "workday_average_hhmm": "09:19",
       "rest_overtime_minutes": 0,
       "rest_overtime_hhmm": "00:00",
-      "average_minutes": 680,
-      "average_hhmm": "11:20",
-      "diff_minutes": 140,
-      "diff_hhmm": "02:20",
-      "diff_signed_hhmm": "+02:20",
+      "average_minutes": 559,
+      "average_hhmm": "09:19",
+      "diff_minutes": 19,
+      "diff_hhmm": "00:19",
+      "diff_signed_hhmm": "+00:19",
       "direction": "above",
-      "bar_count": 5,
-      "bar": "🟥🟥🟥🟥🟥",
-      "included_days": 1,
-      "dates": [
-        "2026-08-10"
-      ],
-      "daily_minutes": [
-        680
-      ],
-      "rest_overtime_dates": []
+      "bar_count": 1,
+      "bar": "🟥",
+      "included_days": 5
     },
     {
       "week_start": "2026-08-03",
@@ -56,24 +97,7 @@
       "direction": "above",
       "bar_count": 8,
       "bar": "🟥🟥🟥🟥🟥🟥🟥🟥",
-      "included_days": 5,
-      "dates": [
-        "2026-08-03",
-        "2026-08-04",
-        "2026-08-05",
-        "2026-08-06",
-        "2026-08-07"
-      ],
-      "daily_minutes": [
-        645,
-        480,
-        738,
-        631,
-        630
-      ],
-      "rest_overtime_dates": [
-        "2026-08-08"
-      ]
+      "included_days": 5
     },
     {
       "week_start": "2026-07-27",
@@ -97,22 +121,7 @@
       "direction": "above",
       "bar_count": 1,
       "bar": "🟥",
-      "included_days": 5,
-      "dates": [
-        "2026-07-27",
-        "2026-07-28",
-        "2026-07-29",
-        "2026-07-30",
-        "2026-07-31"
-      ],
-      "daily_minutes": [
-        728,
-        715,
-        615,
-        678,
-        0
-      ],
-      "rest_overtime_dates": []
+      "included_days": 5
     },
     {
       "week_start": "2026-07-20",
@@ -136,22 +145,7 @@
       "direction": "below",
       "bar_count": 1,
       "bar": "🟩",
-      "included_days": 5,
-      "dates": [
-        "2026-07-20",
-        "2026-07-21",
-        "2026-07-22",
-        "2026-07-23",
-        "2026-07-24"
-      ],
-      "daily_minutes": [
-        651,
-        623,
-        180,
-        540,
-        540
-      ],
-      "rest_overtime_dates": []
+      "included_days": 5
     },
     {
       "week_start": "2026-07-13",
@@ -175,24 +169,7 @@
       "direction": "above",
       "bar_count": 8,
       "bar": "🟥🟥🟥🟥🟥🟥🟥🟥",
-      "included_days": 5,
-      "dates": [
-        "2026-07-13",
-        "2026-07-14",
-        "2026-07-15",
-        "2026-07-16",
-        "2026-07-17"
-      ],
-      "daily_minutes": [
-        795,
-        780,
-        540,
-        380,
-        0
-      ],
-      "rest_overtime_dates": [
-        "2026-07-19"
-      ]
+      "included_days": 5
     },
     {
       "week_start": "2026-07-06",
@@ -216,22 +193,7 @@
       "direction": "above",
       "bar_count": 4,
       "bar": "🟥🟥🟥🟥",
-      "included_days": 5,
-      "dates": [
-        "2026-07-06",
-        "2026-07-07",
-        "2026-07-08",
-        "2026-07-09",
-        "2026-07-10"
-      ],
-      "daily_minutes": [
-        420,
-        600,
-        720,
-        630,
-        900
-      ],
-      "rest_overtime_dates": []
+      "included_days": 5
     },
     {
       "week_start": "2026-06-29",
@@ -255,22 +217,7 @@
       "direction": "above",
       "bar_count": 4,
       "bar": "🟥🟥🟥🟥",
-      "included_days": 5,
-      "dates": [
-        "2026-06-29",
-        "2026-06-30",
-        "2026-07-01",
-        "2026-07-02",
-        "2026-07-03"
-      ],
-      "daily_minutes": [
-        665,
-        856,
-        720,
-        649,
-        465
-      ],
-      "rest_overtime_dates": []
+      "included_days": 5
     },
     {
       "week_start": "2026-06-22",
@@ -294,22 +241,7 @@
       "direction": "above",
       "bar_count": 5,
       "bar": "🟥🟥🟥🟥🟥",
-      "included_days": 5,
-      "dates": [
-        "2026-06-22",
-        "2026-06-23",
-        "2026-06-24",
-        "2026-06-25",
-        "2026-06-26"
-      ],
-      "daily_minutes": [
-        808,
-        779,
-        690,
-        720,
-        510
-      ],
-      "rest_overtime_dates": []
+      "included_days": 5
     },
     {
       "week_start": "2026-06-15",
@@ -333,20 +265,7 @@
       "direction": "above",
       "bar_count": 5,
       "bar": "🟥🟥🟥🟥🟥",
-      "included_days": 4,
-      "dates": [
-        "2026-06-15",
-        "2026-06-16",
-        "2026-06-17",
-        "2026-06-18"
-      ],
-      "daily_minutes": [
-        690,
-        815,
-        570,
-        650
-      ],
-      "rest_overtime_dates": []
+      "included_days": 4
     },
     {
       "week_start": "2026-06-08",
@@ -370,24 +289,7 @@
       "direction": "above",
       "bar_count": 8,
       "bar": "🟥🟥🟥🟥🟥🟥🟥🟥",
-      "included_days": 5,
-      "dates": [
-        "2026-06-08",
-        "2026-06-09",
-        "2026-06-10",
-        "2026-06-11",
-        "2026-06-12"
-      ],
-      "daily_minutes": [
-        698,
-        840,
-        660,
-        690,
-        450
-      ],
-      "rest_overtime_dates": [
-        "2026-06-13"
-      ]
+      "included_days": 5
     },
     {
       "week_start": "2026-06-01",
@@ -411,25 +313,7 @@
       "direction": "above",
       "bar_count": 8,
       "bar": "🟥🟥🟥🟥🟥🟥🟥🟥",
-      "included_days": 5,
-      "dates": [
-        "2026-06-01",
-        "2026-06-02",
-        "2026-06-03",
-        "2026-06-04",
-        "2026-06-05"
-      ],
-      "daily_minutes": [
-        660,
-        700,
-        630,
-        905,
-        735
-      ],
-      "rest_overtime_dates": [
-        "2026-06-06",
-        "2026-06-07"
-      ]
+      "included_days": 5
     },
     {
       "week_start": "2026-05-25",
@@ -453,22 +337,7 @@
       "direction": "above",
       "bar_count": 2,
       "bar": "🟥🟥",
-      "included_days": 5,
-      "dates": [
-        "2026-05-25",
-        "2026-05-26",
-        "2026-05-27",
-        "2026-05-28",
-        "2026-05-29"
-      ],
-      "daily_minutes": [
-        660,
-        554,
-        634,
-        685,
-        450
-      ],
-      "rest_overtime_dates": []
+      "included_days": 5
     },
     {
       "week_start": "2026-05-18",
@@ -492,24 +361,7 @@
       "direction": "above",
       "bar_count": 8,
       "bar": "🟥🟥🟥🟥🟥🟥🟥🟥",
-      "included_days": 5,
-      "dates": [
-        "2026-05-18",
-        "2026-05-19",
-        "2026-05-20",
-        "2026-05-21",
-        "2026-05-22"
-      ],
-      "daily_minutes": [
-        605,
-        775,
-        655,
-        817,
-        420
-      ],
-      "rest_overtime_dates": [
-        "2026-05-24"
-      ]
+      "included_days": 5
     },
     {
       "week_start": "2026-05-11",
@@ -533,22 +385,7 @@
       "direction": "above",
       "bar_count": 3,
       "bar": "🟥🟥🟥",
-      "included_days": 5,
-      "dates": [
-        "2026-05-11",
-        "2026-05-12",
-        "2026-05-13",
-        "2026-05-14",
-        "2026-05-15"
-      ],
-      "daily_minutes": [
-        543,
-        658,
-        699,
-        675,
-        560
-      ],
-      "rest_overtime_dates": []
+      "included_days": 5
     },
     {
       "week_start": "2026-05-04",
@@ -572,20 +409,7 @@
       "direction": "below",
       "bar_count": 3,
       "bar": "🟩🟩🟩",
-      "included_days": 4,
-      "dates": [
-        "2026-05-06",
-        "2026-05-07",
-        "2026-05-08",
-        "2026-05-09"
-      ],
-      "daily_minutes": [
-        0,
-        513,
-        707,
-        588
-      ],
-      "rest_overtime_dates": []
+      "included_days": 4
     },
     {
       "week_start": "2026-04-27",
@@ -609,20 +433,7 @@
       "direction": "below",
       "bar_count": 1,
       "bar": "🟩",
-      "included_days": 4,
-      "dates": [
-        "2026-04-27",
-        "2026-04-28",
-        "2026-04-29",
-        "2026-04-30"
-      ],
-      "daily_minutes": [
-        465,
-        625,
-        630,
-        360
-      ],
-      "rest_overtime_dates": []
+      "included_days": 4
     },
     {
       "week_start": "2026-04-20",
@@ -646,22 +457,7 @@
       "direction": "above",
       "bar_count": 2,
       "bar": "🟥🟥",
-      "included_days": 5,
-      "dates": [
-        "2026-04-20",
-        "2026-04-21",
-        "2026-04-22",
-        "2026-04-23",
-        "2026-04-24"
-      ],
-      "daily_minutes": [
-        650,
-        645,
-        650,
-        625,
-        479
-      ],
-      "rest_overtime_dates": []
+      "included_days": 5
     },
     {
       "week_start": "2026-04-13",
@@ -685,24 +481,7 @@
       "direction": "above",
       "bar_count": 8,
       "bar": "🟥🟥🟥🟥🟥🟥🟥🟥",
-      "included_days": 5,
-      "dates": [
-        "2026-04-13",
-        "2026-04-14",
-        "2026-04-15",
-        "2026-04-16",
-        "2026-04-17"
-      ],
-      "daily_minutes": [
-        828,
-        695,
-        777,
-        680,
-        905
-      ],
-      "rest_overtime_dates": [
-        "2026-04-18"
-      ]
+      "included_days": 5
     },
     {
       "week_start": "2026-04-06",
@@ -726,20 +505,7 @@
       "direction": "above",
       "bar_count": 4,
       "bar": "🟥🟥🟥🟥",
-      "included_days": 4,
-      "dates": [
-        "2026-04-07",
-        "2026-04-08",
-        "2026-04-09",
-        "2026-04-10"
-      ],
-      "daily_minutes": [
-        825,
-        621,
-        708,
-        540
-      ],
-      "rest_overtime_dates": []
+      "included_days": 4
     }
   ]
 }
